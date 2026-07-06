@@ -1,3 +1,5 @@
+import type { BranchDto, CreateBranchPayload, CreateRetailerPayload, PaginatedResult, RetailerDto, UpdateBranchPayload, UpdateRetailerPayload } from '@starter/shared-types';
+
 const API_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api').replace(/\/$/, '');
 
 const request = async <T>(path: string, init: RequestInit): Promise<T> => {
@@ -15,12 +17,8 @@ const request = async <T>(path: string, init: RequestInit): Promise<T> => {
   return payload;
 };
 
-interface Paginated<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-}
+type Paginated<T> = PaginatedResult<T>;
+export type { BranchDto, CreateBranchPayload, RetailerDto, UpdateBranchPayload, UpdateRetailerPayload };
 
 export interface AdminUserItem {
   id: string;
@@ -82,6 +80,10 @@ export interface AdminDashboardSummary {
   subscriptions: number;
   pushDevices: number;
   usersWithAvatar: number;
+  retailers: number;
+  activeRetailers: number;
+  branches: number;
+  activeBranches: number;
 }
 
 export interface MonetizationConfig {
@@ -90,6 +92,31 @@ export interface MonetizationConfig {
 }
 
 export const adminApi = {
+
+  listRetailers: async (accessToken: string, query: URLSearchParams): Promise<Paginated<RetailerDto>> => {
+    const result = await request<{ success: true; data: Paginated<RetailerDto> }>(`/admin/retailers?${query.toString()}`, { method: 'GET', headers: { Authorization: `Bearer ${accessToken}` } });
+    return result.data;
+  },
+  createRetailer: async (accessToken: string, input: CreateRetailerPayload): Promise<RetailerDto> => {
+    const result = await request<{ success: true; data: RetailerDto }>('/admin/retailers', { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify(input) });
+    return result.data;
+  },
+  updateRetailer: async (accessToken: string, id: string, input: UpdateRetailerPayload): Promise<RetailerDto> => {
+    const result = await request<{ success: true; data: RetailerDto }>(`/admin/retailers/${id}`, { method: 'PATCH', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify(input) });
+    return result.data;
+  },
+  listBranches: async (accessToken: string, retailerId: string, query: URLSearchParams): Promise<Paginated<BranchDto>> => {
+    const result = await request<{ success: true; data: Paginated<BranchDto> }>(`/admin/retailers/${retailerId}/branches?${query.toString()}`, { method: 'GET', headers: { Authorization: `Bearer ${accessToken}` } });
+    return result.data;
+  },
+  createBranch: async (accessToken: string, retailerId: string, input: CreateBranchPayload): Promise<BranchDto> => {
+    const result = await request<{ success: true; data: BranchDto }>(`/admin/retailers/${retailerId}/branches`, { method: 'POST', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify(input) });
+    return result.data;
+  },
+  updateBranch: async (accessToken: string, id: string, input: UpdateBranchPayload): Promise<BranchDto> => {
+    const result = await request<{ success: true; data: BranchDto }>(`/admin/branches/${id}`, { method: 'PATCH', headers: { Authorization: `Bearer ${accessToken}` }, body: JSON.stringify(input) });
+    return result.data;
+  },
   getDashboard: async (accessToken: string): Promise<AdminDashboardSummary> => {
     const result = await request<{ success: true; data: AdminDashboardSummary }>('/admin/dashboard', {
       method: 'GET',

@@ -4,9 +4,11 @@ import { Card } from '@starter/ui';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthContext';
 import { featureFlags } from '../../config';
+import { BranchesAdminSection } from './branches/BranchesAdminSection';
+import { RetailersAdminSection } from './retailers/RetailersAdminSection';
 import { adminApi, type AdminAvatarItem, type AdminDashboardSummary, type AdminPaymentItem, type AdminSubscriptionItem, type AdminUserItem, type MonetizationConfig } from './admin-api';
 
-type AdminSection = 'dashboard' | 'users' | 'payments' | 'subscriptions' | 'notifications' | 'avatars' | 'monetization';
+type AdminSection = 'dashboard' | 'retailers' | 'branches' | 'users' | 'payments' | 'subscriptions' | 'notifications' | 'avatars' | 'monetization';
 
 const tableWrapper: CSSProperties = { overflowX: 'auto', width: '100%' };
 const tableStyle: CSSProperties = { width: '100%', borderCollapse: 'collapse', minWidth: 640 };
@@ -30,6 +32,8 @@ export const AdminPage = (): ReactElement => {
   const sections = useMemo<Array<{ id: AdminSection; label: string }>>(
     () => [
       { id: 'dashboard', label: t('admin.navigation.dashboard') },
+      { id: 'retailers', label: t('admin.comparator.wholesalers') },
+      { id: 'branches', label: t('admin.comparator.branches') },
       { id: 'users', label: t('admin.navigation.users') },
       ...(featureFlags.billing ? ([
         { id: 'payments' as const, label: t('admin.navigation.payments') },
@@ -161,8 +165,8 @@ export const AdminPage = (): ReactElement => {
                 <Card title={t('admin.dashboard.adminUsers')}><p>{dashboard.adminUsers}</p></Card>
                 {featureFlags.billing ? <Card title={t('admin.dashboard.payments')}><p>{dashboard.payments}</p></Card> : null}
                 {featureFlags.billing ? <Card title={t('admin.dashboard.subscriptions')}><p>{dashboard.subscriptions}</p></Card> : null}
-                <Card title={t('admin.comparator.wholesalers')}><p>{t('admin.comparator.soon')}</p></Card>
-                <Card title={t('admin.comparator.branches')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.wholesalers')}><p>{dashboard.activeRetailers} / {dashboard.retailers} activos</p></Card>
+                <Card title={t('admin.comparator.branches')}><p>{dashboard.activeBranches} / {dashboard.branches} activas</p></Card>
                 <Card title={t('admin.comparator.priceLists')}><p>{t('admin.comparator.soon')}</p></Card>
                 <Card title={t('admin.comparator.products')}><p>{t('admin.comparator.soon')}</p></Card>
                 <Card title={t('admin.comparator.imports')}><p>{t('admin.comparator.soon')}</p></Card>
@@ -171,6 +175,10 @@ export const AdminPage = (): ReactElement => {
                 <Card title={t('admin.dashboard.usersWithAvatar')}><p>{dashboard.usersWithAvatar}</p></Card>
               </div>
             ) : null}
+
+            {section === 'retailers' && accessToken ? <RetailersAdminSection accessToken={accessToken} /> : null}
+
+            {section === 'branches' && accessToken ? <BranchesAdminSection accessToken={accessToken} /> : null}
 
             {section === 'users' ? (
               <div style={tableWrapper}><table style={tableStyle}><thead><tr><th>{t('admin.users.email')}</th><th>{t('admin.users.role')}</th><th>{t('admin.users.provider')}</th><th>{t('admin.users.verified')}</th><th>{t('admin.users.actions')}</th></tr></thead><tbody>{users.map((user) => <tr key={user.id}><td>{user.email}</td><td>{user.role}</td><td>{user.provider}</td><td>{user.emailVerified ? t('admin.common.yes') : t('admin.common.no')}</td><td><button type="button" onClick={() => void onRoleChange(user.id, user.role === 'admin' ? 'user' : 'admin')}>{t('admin.users.toggleRole')}</button></td></tr>)}</tbody></table></div>

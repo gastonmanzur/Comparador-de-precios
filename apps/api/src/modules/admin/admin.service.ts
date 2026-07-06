@@ -8,6 +8,8 @@ import { PaymentTransactionModel } from '../payments/models/payment-transaction.
 import { SubscriptionModel, subscriptionPeriods, subscriptionStatuses } from '../payments/models/subscription.model.js';
 import { MonetizationConfigModel, monetizationModes, subscriptionPeriodModes } from '../payments/models/monetization-config.model.js';
 import { MonetizationConfigRepository } from '../payments/repositories/monetization-config.repository.js';
+import { RetailerModel } from '../retailers/retailer.model.js';
+import { BranchModel } from '../branches/branch.model.js';
 
 export class AdminService {
   constructor(
@@ -16,13 +18,17 @@ export class AdminService {
   ) {}
 
   async getDashboardSummary() {
-    const [users, adminUsers, payments, subscriptions, pushDevices, usersWithAvatar] = await Promise.all([
+    const [users, adminUsers, payments, subscriptions, pushDevices, usersWithAvatar, retailers, activeRetailers, branches, activeBranches] = await Promise.all([
       UserModel.countDocuments(),
       UserModel.countDocuments({ role: 'admin' }),
       PaymentTransactionModel.countDocuments(),
       SubscriptionModel.countDocuments(),
       PushDeviceModel.countDocuments({ status: 'active' }),
-      UserModel.countDocuments({ avatar: { $exists: true } })
+      UserModel.countDocuments({ avatar: { $exists: true } }),
+      RetailerModel.countDocuments(),
+      RetailerModel.countDocuments({ active: true }),
+      BranchModel.countDocuments(),
+      BranchModel.countDocuments({ active: true })
     ]);
 
     return {
@@ -32,7 +38,11 @@ export class AdminService {
       payments,
       subscriptions,
       pushDevices,
-      usersWithAvatar
+      usersWithAvatar,
+      retailers,
+      activeRetailers,
+      branches,
+      activeBranches
     };
   }
 

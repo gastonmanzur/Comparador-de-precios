@@ -42,3 +42,53 @@ export interface PushDeviceDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface RetailerDto {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  websiteUrl: string | null;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CreateRetailerPayload = Pick<RetailerDto, 'name'> & Partial<Pick<RetailerDto, 'slug' | 'active'>> & {
+  description?: string;
+  logoUrl?: string;
+  websiteUrl?: string;
+};
+export type UpdateRetailerPayload = Partial<CreateRetailerPayload>;
+
+export interface BranchDto {
+  id: string;
+  retailerId: string;
+  externalBranchId: string;
+  name: string;
+  address: string;
+  city: string;
+  province: string;
+  postalCode: string | null;
+  country: string;
+  phone: string | null;
+  latitude: number;
+  longitude: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CreateBranchPayload = Omit<BranchDto, 'id' | 'retailerId' | 'createdAt' | 'updatedAt' | 'postalCode' | 'phone'> & {
+  postalCode?: string;
+  phone?: string;
+};
+export type UpdateBranchPayload = Partial<CreateBranchPayload>;

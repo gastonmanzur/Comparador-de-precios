@@ -57,7 +57,8 @@ const envSchema = z
     WEBHOOK_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
     WEBHOOK_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(60),
     PUSH_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
-    PUSH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(40)
+    PUSH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(40),
+    FEATURE_BILLING: z.enum(['true', 'false']).default('false').transform((value) => value === 'true')
   })
   .transform((data) => {
     const corsOrigins = data.CORS_ORIGIN.split(',')

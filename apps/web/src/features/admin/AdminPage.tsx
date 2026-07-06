@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Card } from '@starter/ui';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthContext';
+import { featureFlags } from '../../config';
 import { adminApi, type AdminAvatarItem, type AdminDashboardSummary, type AdminPaymentItem, type AdminSubscriptionItem, type AdminUserItem, type MonetizationConfig } from './admin-api';
 
 type AdminSection = 'dashboard' | 'users' | 'payments' | 'subscriptions' | 'notifications' | 'avatars' | 'monetization';
@@ -30,11 +31,13 @@ export const AdminPage = (): ReactElement => {
     () => [
       { id: 'dashboard', label: t('admin.navigation.dashboard') },
       { id: 'users', label: t('admin.navigation.users') },
-      { id: 'payments', label: t('admin.navigation.payments') },
-      { id: 'subscriptions', label: t('admin.navigation.subscriptions') },
+      ...(featureFlags.billing ? ([
+        { id: 'payments' as const, label: t('admin.navigation.payments') },
+        { id: 'subscriptions' as const, label: t('admin.navigation.subscriptions') }
+      ]) : []),
       { id: 'notifications', label: t('admin.navigation.notifications') },
       { id: 'avatars', label: t('admin.navigation.avatars') },
-      { id: 'monetization', label: t('admin.navigation.monetization') }
+      ...(featureFlags.billing ? [{ id: 'monetization' as const, label: t('admin.navigation.monetization') }] : [])
     ],
     [t]
   );
@@ -51,12 +54,12 @@ export const AdminPage = (): ReactElement => {
       try {
         if (section === 'dashboard') setDashboard(await adminApi.getDashboard(accessToken));
         if (section === 'users') setUsers((await adminApi.listUsers(accessToken, new URLSearchParams({ page: '1', limit: '20' }))).items);
-        if (section === 'payments') setPayments((await adminApi.listPayments(accessToken, new URLSearchParams({ page: '1', limit: '20' }))).items);
-        if (section === 'subscriptions') {
+        if (featureFlags.billing && section === 'payments') setPayments((await adminApi.listPayments(accessToken, new URLSearchParams({ page: '1', limit: '20' }))).items);
+        if (featureFlags.billing && section === 'subscriptions') {
           setSubscriptions((await adminApi.listSubscriptions(accessToken, new URLSearchParams({ page: '1', limit: '20' }))).items);
         }
         if (section === 'avatars') setAvatars((await adminApi.listAvatars(accessToken, new URLSearchParams({ page: '1', limit: '20', hasAvatar: 'true' }))).items);
-        if (section === 'monetization') setMonetizationConfig(await adminApi.getMonetizationConfig(accessToken));
+        if (featureFlags.billing && section === 'monetization') setMonetizationConfig(await adminApi.getMonetizationConfig(accessToken));
       } catch (loadError) {
         setError(loadError instanceof Error ? loadError.message : t('admin.common.loadError'));
       } finally {
@@ -139,7 +142,7 @@ export const AdminPage = (): ReactElement => {
   return (
     <main style={{ maxWidth: 1100, margin: '1.5rem auto', padding: '1rem' }}>
       <Card title={t('admin.title')}>
-        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '220px 1fr' }}>
+        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%, 260px),1fr))' }}>
           <nav style={{ display: 'grid', gap: '0.5rem' }}>
             {sections.map((item) => (
               <button key={item.id} type="button" onClick={() => setSection(item.id)} disabled={loading}>
@@ -156,8 +159,14 @@ export const AdminPage = (): ReactElement => {
               <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))' }}>
                 <Card title={t('admin.dashboard.totalUsers')}><p>{dashboard.users}</p></Card>
                 <Card title={t('admin.dashboard.adminUsers')}><p>{dashboard.adminUsers}</p></Card>
-                <Card title={t('admin.dashboard.payments')}><p>{dashboard.payments}</p></Card>
-                <Card title={t('admin.dashboard.subscriptions')}><p>{dashboard.subscriptions}</p></Card>
+                {featureFlags.billing ? <Card title={t('admin.dashboard.payments')}><p>{dashboard.payments}</p></Card> : null}
+                {featureFlags.billing ? <Card title={t('admin.dashboard.subscriptions')}><p>{dashboard.subscriptions}</p></Card> : null}
+                <Card title={t('admin.comparator.wholesalers')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.branches')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.priceLists')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.products')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.imports')}><p>{t('admin.comparator.soon')}</p></Card>
+                <Card title={t('admin.comparator.users')}><p>{t('admin.comparator.soon')}</p></Card>
                 <Card title={t('admin.dashboard.pushDevices')}><p>{dashboard.pushDevices}</p></Card>
                 <Card title={t('admin.dashboard.usersWithAvatar')}><p>{dashboard.usersWithAvatar}</p></Card>
               </div>

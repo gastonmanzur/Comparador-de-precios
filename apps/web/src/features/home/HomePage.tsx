@@ -14,7 +14,7 @@ export const HomePage = (): ReactElement => {
           {t('home.switchLanguage')}
         </button>
         <p>
-          <Link to="/register">Register</Link> | <Link to="/login">Login</Link> | <Link to="/dashboard">Dashboard</Link>
+          <Link to="/register">Registro</Link> | <Link to="/login">Login</Link> | <Link to="/dashboard">Panel</Link>
         </p>
       </Card>
     </main>

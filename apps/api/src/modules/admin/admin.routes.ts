@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { env } from '../../config/env.js';
 import { asyncHandler } from '../../core/async-handler.js';
 import { requireAuth, requireRoles } from '../auth/middleware/auth.middleware.js';
 import { AdminController } from './admin.controller.js';
@@ -12,10 +13,14 @@ adminRouter.use(requireAuth, requireRoles('admin'));
 adminRouter.get('/dashboard', asyncHandler(controller.dashboard));
 adminRouter.get('/users', asyncHandler(controller.listUsers));
 adminRouter.patch('/users/:userId/role', asyncHandler(controller.updateUserRole));
-adminRouter.get('/payments', asyncHandler(controller.listPayments));
-adminRouter.get('/subscriptions', asyncHandler(controller.listSubscriptions));
+if (env.FEATURE_BILLING) {
+  adminRouter.get('/payments', asyncHandler(controller.listPayments));
+  adminRouter.get('/subscriptions', asyncHandler(controller.listSubscriptions));
+}
 adminRouter.post('/notifications/send', asyncHandler(controller.sendNotification));
 adminRouter.get('/avatars', asyncHandler(controller.listAvatars));
 adminRouter.delete('/avatars/:userId', asyncHandler(controller.deleteAvatar));
-adminRouter.get('/monetization-config', asyncHandler(controller.getMonetizationConfig));
-adminRouter.patch('/monetization-config', asyncHandler(controller.updateMonetizationConfig));
+if (env.FEATURE_BILLING) {
+  adminRouter.get('/monetization-config', asyncHandler(controller.getMonetizationConfig));
+  adminRouter.patch('/monetization-config', asyncHandler(controller.updateMonetizationConfig));
+}

@@ -7,6 +7,7 @@ import { useAuth } from '../auth/AuthContext';
 import { authApi } from '../auth/auth-api';
 import { WebPushCard } from '../notifications/WebPushCard';
 import { MonetizationCard } from '../payments/MonetizationCard';
+import { featureFlags } from '../../config';
 import { resolveAvatarUrl } from '../../lib/resolve-avatar-url';
 
 const MAX_SIZE_BYTES = 2_097_152;
@@ -122,7 +123,7 @@ export const DashboardPage = (): ReactElement => {
         </section>
 
         {accessToken ? <WebPushCard accessToken={accessToken} /> : null}
-        {accessToken ? <MonetizationCard accessToken={accessToken} /> : null}
+        {accessToken && featureFlags.billing ? <MonetizationCard accessToken={accessToken} /> : null}
 
         <Link to="/change-password">{t('profile.changePassword')}</Link>
       </Card>

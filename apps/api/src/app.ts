@@ -55,7 +55,9 @@ export const createApp = () => {
   app.use('/api/auth', authRouter);
   app.use('/api/avatars', avatarRouter);
   app.use('/api/push', pushRouter);
-  app.use('/api/payments', paymentsRouter);
+  if (env.FEATURE_BILLING) {
+    app.use('/api/payments', paymentsRouter);
+  }
   app.use('/api/admin', adminRouter);
 
   app.use(notFoundMiddleware);

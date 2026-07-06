@@ -8,14 +8,14 @@ void i18n.use(initReactI18next).init({
     es: {
       translation: {
         home: {
-          title: 'Starter profesional listo para escalar',
-          subtitle: 'Base modular React + Express + MongoDB con TypeScript estricto.',
+          title: 'Comparador de Precios',
+          subtitle: 'Base técnica para comparar listas de compra entre mayoristas cercanos.',
           switchLanguage: 'Cambiar idioma'
         },
         auth: {
           common: { goLogin: 'Ir a login' },
-          register: { title: 'Registro', submit: 'Crear cuenta', success: 'Registro exitoso, revisa tu email.' },
-          login: { title: 'Login', submit: 'Ingresar', google: 'Entrar con Google', forgot: '¿Olvidaste tu contraseña?' },
+          register: { title: 'Crear cuenta en Comparador de Precios', submit: 'Crear cuenta', success: 'Registro exitoso, revisa tu email.' },
+          login: { title: 'Ingresar a Comparador de Precios', submit: 'Ingresar', google: 'Entrar con Google', forgot: '¿Olvidaste tu contraseña?' },
           verify: { title: 'Verificar email', submit: 'Verificar', success: 'Email verificado correctamente' },
           forgot: { title: 'Recuperar contraseña', submit: 'Enviar email', success: 'Si existe la cuenta, enviamos un email.' },
           reset: { title: 'Resetear contraseña', submit: 'Guardar nueva contraseña', success: 'Contraseña actualizada' },
@@ -51,9 +51,10 @@ void i18n.use(initReactI18next).init({
           }
         },
         admin: {
-          title: 'Panel de administración',
-          navigation: { dashboard: 'Dashboard', users: 'Usuarios', payments: 'Pagos', subscriptions: 'Suscripciones', notifications: 'Notificaciones', avatars: 'Avatares', monetization: 'Monetización' },
+          title: 'Panel de administración - Comparador de Precios',
+          navigation: { dashboard: 'Panel', users: 'Usuarios', payments: 'Pagos', subscriptions: 'Suscripciones', notifications: 'Notificaciones', avatars: 'Avatares', monetization: 'Monetización' },
           common: { loading: 'Cargando...', loadError: 'No se pudo cargar la sección.', actionError: 'No se pudo completar la acción.', yes: 'Sí', no: 'No' },
+          comparator: { wholesalers: 'Mayoristas', branches: 'Sucursales', priceLists: 'Listas de precios', products: 'Productos', imports: 'Importaciones', users: 'Usuarios', soon: 'Próximamente' },
           dashboard: { totalUsers: 'Usuarios totales', adminUsers: 'Admins', payments: 'Pagos', subscriptions: 'Suscripciones', pushDevices: 'Dispositivos push', usersWithAvatar: 'Usuarios con avatar' },
           users: { email: 'Email', role: 'Rol', provider: 'Proveedor', verified: 'Verificado', actions: 'Acciones', toggleRole: 'Cambiar rol', roleUpdated: 'Rol actualizado' },
           payments: { user: 'Usuario', type: 'Tipo', status: 'Estado', amount: 'Monto' },
@@ -67,14 +68,14 @@ void i18n.use(initReactI18next).init({
     en: {
       translation: {
         home: {
-          title: 'Professional starter ready to scale',
-          subtitle: 'Modular React + Express + MongoDB baseline with strict TypeScript.',
+          title: 'Comparador de Precios',
+          subtitle: 'Technical baseline for comparing shopping lists across nearby wholesalers.',
           switchLanguage: 'Switch language'
         },
         auth: {
           common: { goLogin: 'Go to login' },
-          register: { title: 'Register', submit: 'Create account', success: 'Registration successful, check your email.' },
-          login: { title: 'Login', submit: 'Sign in', google: 'Sign in with Google', forgot: 'Forgot your password?' },
+          register: { title: 'Create a Comparador de Precios account', submit: 'Create account', success: 'Registration successful, check your email.' },
+          login: { title: 'Sign in to Comparador de Precios', submit: 'Sign in', google: 'Sign in with Google', forgot: 'Forgot your password?' },
           verify: { title: 'Verify email', submit: 'Verify', success: 'Email verified successfully' },
           forgot: { title: 'Forgot password', submit: 'Send email', success: 'If account exists, email has been sent.' },
           reset: { title: 'Reset password', submit: 'Save new password', success: 'Password updated' },
@@ -110,9 +111,10 @@ void i18n.use(initReactI18next).init({
           }
         },
         admin: {
-          title: 'Admin panel',
-          navigation: { dashboard: 'Dashboard', users: 'Users', payments: 'Payments', subscriptions: 'Subscriptions', notifications: 'Notifications', avatars: 'Avatars', monetization: 'Monetization' },
+          title: 'Admin panel - Comparador de Precios',
+          navigation: { dashboard: 'Panel', users: 'Users', payments: 'Payments', subscriptions: 'Subscriptions', notifications: 'Notifications', avatars: 'Avatars', monetization: 'Monetization' },
           common: { loading: 'Loading...', loadError: 'Failed to load section.', actionError: 'Action failed.', yes: 'Yes', no: 'No' },
+          comparator: { wholesalers: 'Wholesalers', branches: 'Branches', priceLists: 'Price lists', products: 'Products', imports: 'Imports', users: 'Users', soon: 'Coming soon' },
           dashboard: { totalUsers: 'Total users', adminUsers: 'Admins', payments: 'Payments', subscriptions: 'Subscriptions', pushDevices: 'Push devices', usersWithAvatar: 'Users with avatar' },
           users: { email: 'Email', role: 'Role', provider: 'Provider', verified: 'Verified', actions: 'Actions', toggleRole: 'Toggle role', roleUpdated: 'Role updated' },
           payments: { user: 'User', type: 'Type', status: 'Status', amount: 'Amount' },
